@@ -5,6 +5,10 @@ export default defineMessages({
     defaultMessage: 'Intl',
     id: 'app.links.intl'
   },
+  tabulka: {
+    defaultMessage: 'Tabulka',
+    id: 'app.links.tabulka'
+  },
   firebase: {
     defaultMessage: 'Firebase',
     id: 'app.links.firebase'

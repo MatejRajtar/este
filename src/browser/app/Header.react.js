@@ -38,6 +38,11 @@ class Header extends Component {
             </Link>
           </li>
           <li>
+            <Link activeClassName="active" to="/tabulka">
+              <FormattedMessage {...linksMessages.tabulka} />
+            </Link>
+          </li>
+          <li>
             <Link activeClassName="active" to="/me">
               <FormattedMessage {...linksMessages.me} />
             </Link>
