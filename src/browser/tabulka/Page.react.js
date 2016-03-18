@@ -1,10 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import $ from 'jquery';
+import Immutable from 'immutable';
 
 class Table extends React.Component {
 
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
     this.state = {data: {}};
   }
 
@@ -31,7 +32,7 @@ class Table extends React.Component {
         <table>
           {this.renderHeaderByKeys(Object.keys(obj[0]))}
           <tbody>
-            <tr>{
+            <tr style={this.constructor.styles.tr}>{
               Object.keys(obj).map((key, i) => {
                 return this.renderTd(Object.values(obj[i]), i);
               })
@@ -48,9 +49,12 @@ class Table extends React.Component {
       <tr>{
         keys.map((key, i) => {
           return (
-            <th key={i}>
+            <th style={this.constructor.styles.th} key={i}>
               {key}
+              <div></div>
+              <input id={key} type="text" style={this.constructor.styles.input} />
             </th>
+
           );
         })
       }</tr>
@@ -60,12 +64,12 @@ class Table extends React.Component {
 
   renderTd(keys, i) {
     return (
-      <tr>{
+      <tr >{
         keys.map((key, i) => {
           return (
-            <th key={i}>
+            <td style={this.constructor.styles.td} key={i}>
               {key}
-            </th>
+            </td>
           );
         })
       }</tr>
@@ -75,11 +79,32 @@ class Table extends React.Component {
   render() {
     return (
       <div>
+
         {this.objToTable(this.state.data)}
+
       </div>
     );
   }
 
 }
+
+Table.styles = {
+  td: {
+    border: "1px solid #cccccc",
+    padding: "6px 13px"
+  },
+  th: {
+    backgroundColor: "#4CAF50",
+    color : "white",
+    padding: "6px",
+    fontWeight: "bold",
+    border: "1px solid #cccccc",
+    width: "100%"
+  },
+  input: {
+    width: "100%",
+    color: "black"
+  }
+};
 
 export default Table;
