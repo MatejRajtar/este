@@ -13,7 +13,7 @@ class Table extends React.Component {
 
   componentDidMount() {
     $.ajax({
-      url: 'http://www.json-generator.com/api/json/get/cikrApwlgy?indent=2',
+      url: 'http://www.json-generator.com/api/json/get/bQFpsSvOJK?indent=2',
       dataType: 'json',
       success: (data) => {
         this.setState({
@@ -72,7 +72,7 @@ class Table extends React.Component {
           /*Filter only if there are filters in the dictionary this.state.filters*/
           if (Object.keys(this.state.filters).length > 0) {
             for (j=0; j < Object.keys(this.state.filters).length; j++) {
-              if (!(((Object.values(obj[i])[j]).toString()).indexOf((Object.values(this.state.filters)[j]).toString()))) {
+              if ((((Object.values(obj[i])[j]).toString()).indexOf((Object.values(this.state.filters)[j]).toString())) > -1) {
                 return this.renderTd(Object.values(obj[i]), i);
               }
             }
@@ -127,7 +127,7 @@ Table.styles = {
     color: "white",
     padding: "6px",
     fontWeight: "bold",
-    border: "1px solid #cccccc",
+    border: "1px solid #cccccc"
   },
   input: {
     width: "100%",
