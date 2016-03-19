@@ -7,13 +7,14 @@ class Table extends React.Component {
     super(props, context);
     this.state = {
       data: {},
-      filters: {}
+      filters: {},
+      complies: true
     };
   }
 
   componentDidMount() {
     $.ajax({
-      url: 'http://www.json-generator.com/api/json/get/bQFpsSvOJK?indent=2',
+      url: 'http://www.json-generator.com/api/json/get/cikrApwlgy?indent=2',
       dataType: 'json',
       success: (data) => {
         this.setState({
@@ -67,18 +68,24 @@ class Table extends React.Component {
     return (
       <tbody>{
         Object.keys(obj).map((key, i) => {
-          var j = 0;
-          console.log(key);
+          console.log(Object.keys(this.state.filters));
+          console.log(Object.values(this.state.filters));
           /*Filter only if there are filters in the dictionary this.state.filters*/
           if (Object.keys(this.state.filters).length > 0) {
-            for (j=0; j < Object.keys(this.state.filters).length; j++) {
+            this.state.complies = true;
+            for (var j = 0; j < Object.keys(this.state.filters).length; j++) {
               if ((((Object.values(obj[i])[j]).toString()).indexOf((Object.values(this.state.filters)[j]).toString())) > -1) {
-                return this.renderTd(Object.values(obj[i]), i);
               }
+              else {
+                this.state.complies = false
+              }
+            }
+            if (this.state.complies) {
+              return this.renderTd(Object.values(obj[i]));
             }
           }
           else {
-            return this.renderTd(Object.values(obj[i]), i);
+            return this.renderTd(Object.values(obj[i]));
           }
         })
       }</tbody>
