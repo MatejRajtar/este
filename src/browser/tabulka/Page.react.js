@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
-import $ from 'jquery';
+import Fetch from 'react-fetch';
 
 class Table extends React.Component {
 
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
     this.state = {
       data: {},
       filters: {},
@@ -13,36 +13,34 @@ class Table extends React.Component {
   }
 
   componentDidMount() {
-    $.ajax({
-      url: 'http://www.json-generator.com/api/json/get/cikrApwlgy?indent=2',
-      dataType: 'json',
-      success: (data) => {
+    fetch('http://www.json-generator.com/api/json/get/cikrApwlgy?indent=2')
+      .then((responseData) => responseData.text())
+      .then((responseData) => {
         this.setState({
-          data: data,
-          heading: data[1]
+          data: JSON.parse(responseData)
         });
-      },
-      error: (xhr, status, err) => {
-        console.error(this.props.url, status, err.toString());
-      }
-    });
+        this.setState({
+          heading: Object.keys(this.state.data[1])
+        });
+      });
   }
 
-  renderHeaderByKeys(keys) {
+  renderHeader(keys) {
     return (
       <thead>
       <tr>{
         keys.map((key, i) => {
           return (
-            <th style={this.constructor.styles.th} key={i}>
+            <th style={this.constructor.styles.th}>
               {key}
               <div></div>
               <input
                 id={i}
                 type="text"
                 onChange={
-                  this.filterData.bind(this)
+                  this.filtersChanged.bind(this)
                   }
+                placeholder="set filter"
                 style={this.constructor.styles.input}
               />
             </th>
@@ -53,7 +51,7 @@ class Table extends React.Component {
     );
   }
 
-  filterData(phrase) {
+  filtersChanged(phrase) {
     event.preventDefault();
     if (phrase.target.value != "") {
       this.state.filters[phrase.target.id] = phrase.target.value;
@@ -64,40 +62,39 @@ class Table extends React.Component {
     this.forceUpdate()
   }
 
-  objToTable(obj) {
+  renderData(obj) {
     return (
       <tbody>{
         Object.keys(obj).map((key, i) => {
-          console.log(Object.keys(this.state.filters));
-          console.log(Object.values(this.state.filters));
           /*Filter only if there are filters in the dictionary this.state.filters*/
           if (Object.keys(this.state.filters).length > 0) {
             this.state.complies = true;
             for (var j = 0; j < Object.keys(this.state.filters).length; j++) {
-              if ((((Object.values(obj[i])[Object.keys(this.state.filters)[j]]).toString()).indexOf((Object.values(this.state.filters)[j]).toString())) > -1) {
+              if ((((Object.values(obj[i])[Object.keys(this.state.filters)[j]]).toString()).toLowerCase()
+                  .indexOf((Object.values(this.state.filters)[j]).toString().toLowerCase())) > -1) {
               }
               else {
                 this.state.complies = false
               }
             }
             if (this.state.complies) {
-              return this.renderTd(Object.values(obj[i]));
+              return this.renderRows(Object.values(obj[i]));
             }
           }
           else {
-            return this.renderTd(Object.values(obj[i]));
+            return this.renderRows(Object.values(obj[i]));
           }
         })
       }</tbody>
     );
   }
 
-  renderTd(keys, i) {
+  renderRows(keys) {
     return (
-      <tr style={this.constructor.styles.tr}>{
-        keys.map((key, i) => {
+      <tr>{
+        keys.map((key) => {
           return (
-            <td style={this.constructor.styles.td} key={i}>
+            <td style={this.constructor.styles.td} >
               {key}
             </td>
           );
@@ -110,9 +107,9 @@ class Table extends React.Component {
     if (this.state.heading) {
       return (
         <div>
-          <table>
-            {this.renderHeaderByKeys(Object.keys(this.state.heading))}
-            {this.objToTable(this.state.data)}
+          <table style={this.constructor.styles.table}>
+            {this.renderHeader(this.state.heading)}
+            {this.renderData(this.state.data)}
           </table>
         </div>
       );
@@ -125,11 +122,17 @@ class Table extends React.Component {
 }
 
 Table.styles = {
+  table: {
+    width: "100%",
+    tableLayout: "fixed"
+  },
   td: {
+    wordWrap: "break-word",
     border: "1px solid #cccccc",
     padding: "6px 13px"
   },
   th: {
+    wordWrap: "break-word",
     backgroundColor: "#4CAF50",
     color: "white",
     padding: "6px",
@@ -138,7 +141,8 @@ Table.styles = {
   },
   input: {
     width: "100%",
-    color: "#4CAF50"
+    color: "#4CAF50",
+    textAlign: "center"
   }
 };
 
