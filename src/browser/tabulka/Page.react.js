@@ -74,7 +74,7 @@ class Table extends React.Component {
           if (Object.keys(this.state.filters).length > 0) {
             this.state.complies = true;
             for (var j = 0; j < Object.keys(this.state.filters).length; j++) {
-              if ((((Object.values(obj[i])[j]).toString()).indexOf((Object.values(this.state.filters)[j]).toString())) > -1) {
+              if ((((Object.values(obj[i])[Object.keys(this.state.filters)[j]]).toString()).indexOf((Object.values(this.state.filters)[j]).toString())) > -1) {
               }
               else {
                 this.state.complies = false
